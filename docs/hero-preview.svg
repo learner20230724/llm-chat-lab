@@ -1,0 +1,99 @@
+<svg width="1600" height="980" viewBox="0 0 1600 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="980" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1424"/>
+      <stop offset="1" stop-color="#08111D"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#101C31" stop-opacity="0.98"/>
+      <stop offset="1" stop-color="#0B1527" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#86A3FF"/>
+      <stop offset="1" stop-color="#56D7BF"/>
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="1600" height="980" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="40" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="980" rx="36" fill="url(#bg)"/>
+  <g opacity="0.18">
+    <path d="M0 120H1600" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M0 240H1600" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M0 360H1600" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M0 480H1600" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M0 600H1600" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M0 720H1600" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M0 840H1600" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M160 0V980" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M320 0V980" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M480 0V980" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M640 0V980" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M800 0V980" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M960 0V980" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M1120 0V980" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M1280 0V980" stroke="#A7BDD8" stroke-width="1"/>
+    <path d="M1440 0V980" stroke="#A7BDD8" stroke-width="1"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="56" y="48" width="1488" height="884" rx="28" fill="#0C1628" fill-opacity="0.92" stroke="#24344C"/>
+  </g>
+
+  <text x="98" y="110" fill="#8FA6C8" font-family="Inter, Arial, sans-serif" font-size="18" letter-spacing="4">LOCAL-FIRST CHAT COMPARISON WORKSPACE</text>
+  <text x="96" y="186" fill="#F4F8FF" font-family="Inter, Arial, sans-serif" font-size="62" font-weight="700">llm-chat-lab</text>
+  <text x="98" y="232" fill="#C6D3E7" font-family="Inter, Arial, sans-serif" font-size="26">Test the same input against different chat setups.</text>
+  <text x="98" y="286" fill="#9CB2CF" font-family="Inter, Arial, sans-serif" font-size="22">Prompt preset · Model preset · Memory mode · Side-by-side output</text>
+
+  <rect x="96" y="334" width="1408" height="94" rx="22" fill="#09111F" stroke="#22314A"/>
+  <text x="126" y="372" fill="#7F93AF" font-family="Inter, Arial, sans-serif" font-size="18" letter-spacing="3">SHARED INPUT</text>
+  <text x="126" y="407" fill="#E8F0FF" font-family="Inter, Arial, sans-serif" font-size="24">Design a lightweight review workflow for product launch notes. Keep it practical and avoid bloated process.</text>
+
+  <rect x="96" y="464" width="682" height="364" rx="24" fill="url(#panel)" stroke="#273956"/>
+  <rect x="822" y="464" width="682" height="364" rx="24" fill="url(#panel)" stroke="#273956"/>
+
+  <text x="128" y="514" fill="#7F93AF" font-family="Inter, Arial, sans-serif" font-size="18" letter-spacing="3">PANEL A</text>
+  <text x="128" y="554" fill="#F5F8FF" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700">Concise operator</text>
+  <rect x="590" y="506" width="140" height="34" rx="17" fill="#16233B" stroke="#314465"/>
+  <text x="618" y="529" fill="#D8E4FA" font-family="Inter, Arial, sans-serif" font-size="16">Fast feedback</text>
+
+  <text x="854" y="514" fill="#7F93AF" font-family="Inter, Arial, sans-serif" font-size="18" letter-spacing="3">PANEL B</text>
+  <text x="854" y="554" fill="#F5F8FF" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700">Structured analyst</text>
+  <rect x="1304" y="506" width="154" height="34" rx="17" fill="#102A27" stroke="#2E5B56"/>
+  <text x="1336" y="529" fill="#D8FFF6" font-family="Inter, Arial, sans-serif" font-size="16">More context</text>
+
+  <rect x="128" y="590" width="190" height="72" rx="16" fill="#0A1322" stroke="#22314A"/>
+  <rect x="340" y="590" width="190" height="72" rx="16" fill="#0A1322" stroke="#22314A"/>
+  <rect x="552" y="590" width="190" height="72" rx="16" fill="#0A1322" stroke="#22314A"/>
+  <rect x="854" y="590" width="190" height="72" rx="16" fill="#0A1322" stroke="#22314A"/>
+  <rect x="1066" y="590" width="190" height="72" rx="16" fill="#0A1322" stroke="#22314A"/>
+  <rect x="1278" y="590" width="190" height="72" rx="16" fill="#0A1322" stroke="#22314A"/>
+
+  <text x="150" y="617" fill="#93A7C4" font-family="Inter, Arial, sans-serif" font-size="14">Latency</text>
+  <text x="150" y="648" fill="#F5F8FF" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">1.8s</text>
+  <text x="362" y="617" fill="#93A7C4" font-family="Inter, Arial, sans-serif" font-size="14">Tokens</text>
+  <text x="362" y="648" fill="#F5F8FF" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">214</text>
+  <text x="574" y="617" fill="#93A7C4" font-family="Inter, Arial, sans-serif" font-size="14">Cost</text>
+  <text x="574" y="648" fill="#F5F8FF" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">$0.012</text>
+
+  <text x="876" y="617" fill="#93A7C4" font-family="Inter, Arial, sans-serif" font-size="14">Latency</text>
+  <text x="876" y="648" fill="#F5F8FF" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">3.1s</text>
+  <text x="1088" y="617" fill="#93A7C4" font-family="Inter, Arial, sans-serif" font-size="14">Tokens</text>
+  <text x="1088" y="648" fill="#F5F8FF" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">337</text>
+  <text x="1300" y="617" fill="#93A7C4" font-family="Inter, Arial, sans-serif" font-size="14">Cost</text>
+  <text x="1300" y="648" fill="#F5F8FF" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">$0.021</text>
+
+  <rect x="128" y="688" width="614" height="110" rx="18" fill="#08111D" stroke="#1F2D45"/>
+  <rect x="854" y="688" width="614" height="110" rx="18" fill="#08111D" stroke="#1F2D45"/>
+  <text x="152" y="724" fill="#E9F1FF" font-family="Inter, Arial, sans-serif" font-size="20">This setup optimizes for speed and operator clarity.</text>
+  <text x="152" y="758" fill="#A9BCD8" font-family="Inter, Arial, sans-serif" font-size="18">Operator brief · GPT-5.4 balanced · Session carryover</text>
+  <text x="152" y="789" fill="#A9BCD8" font-family="Inter, Arial, sans-serif" font-size="18">Recommendation: turn the request into a tight execution path.</text>
+
+  <text x="878" y="724" fill="#E9F1FF" font-family="Inter, Arial, sans-serif" font-size="20">This setup optimizes for inspection and structured tradeoffs.</text>
+  <text x="878" y="758" fill="#A9BCD8" font-family="Inter, Arial, sans-serif" font-size="18">Analyst breakdown · Deep reasoning mock · Project context</text>
+  <text x="878" y="789" fill="#A9BCD8" font-family="Inter, Arial, sans-serif" font-size="18">Recommendation: separate scope, decision criteria, and rollout risks.</text>
+
+  <rect x="96" y="858" width="260" height="40" rx="20" fill="url(#accent)"/>
+  <text x="141" y="885" fill="#07111F" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">Open compare workspace</text>
+</svg>

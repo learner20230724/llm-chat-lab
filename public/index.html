@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>llm-chat-lab</title>
+    <meta
+      name="description"
+      content="A local-first workspace for comparing prompts, model presets, memory modes, and workflow behavior side by side."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">LOCAL-FIRST CHAT COMPARISON WORKSPACE</div>
+          <h1>Test the same prompt against different chat setups.</h1>
+          <p class="hero-text">
+            llm-chat-lab is a first runnable shell for comparing prompt presets,
+            model presets, memory modes, and workflow styles side by side —
+            without pretending to be a full agent platform.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#workspace">Open compare workspace</a>
+            <a class="button secondary" href="../README.md">Read project overview</a>
+          </div>
+          <div class="hero-meta">
+            <span>2-panel compare view</span>
+            <span>Preset-driven</span>
+            <span>Mock responses</span>
+            <span>Local-first</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="metric-row">
+            <div>
+              <div class="metric-label">Compare target</div>
+              <div class="metric-value">Prompt + model + memory</div>
+            </div>
+            <div>
+              <div class="metric-label">Focus</div>
+              <div class="metric-value">Inspection over chat novelty</div>
+            </div>
+          </div>
+          <div class="code-card">
+            <div class="code-label">Starter prompt</div>
+            <code>
+              Summarize the tradeoffs of draft-first automation for an internal
+              tool team.
+            </code>
+          </div>
+        </div>
+      </header>
+
+      <main id="workspace" class="workspace">
+        <section class="workspace-toolbar">
+          <div>
+            <div class="section-label">COMPARE RUN</div>
+            <h2>One shared input, two different setups.</h2>
+          </div>
+          <div class="toolbar-actions">
+            <button id="runButton" class="button primary">Run compare</button>
+            <button id="swapButton" class="button ghost">Swap panels</button>
+          </div>
+        </section>
+
+        <section class="composer-card">
+          <label class="section-label" for="sharedInput">SHARED INPUT</label>
+          <textarea id="sharedInput" rows="4">Design a lightweight review workflow for product launch notes. Keep it practical and avoid bloated process.</textarea>
+        </section>
+
+        <section class="panels-grid">
+          <article class="panel-card" data-panel="left">
+            <div class="panel-head">
+              <div>
+                <div class="section-label">PANEL A</div>
+                <h3>Concise operator</h3>
+              </div>
+              <span class="chip">Fast feedback</span>
+            </div>
+            <div class="control-grid">
+              <label>
+                <span>Prompt preset</span>
+                <select data-role="promptPreset">
+                  <option value="operator">Operator brief</option>
+                  <option value="analyst">Analyst breakdown</option>
+                  <option value="builder">Builder handoff</option>
+                </select>
+              </label>
+              <label>
+                <span>Model preset</span>
+                <select data-role="modelPreset">
+                  <option value="gpt54">GPT-5.4 balanced</option>
+                  <option value="fast">Fast local mock</option>
+                  <option value="deep">Deep reasoning mock</option>
+                </select>
+              </label>
+              <label>
+                <span>Memory mode</span>
+                <select data-role="memoryMode">
+                  <option value="none">No memory</option>
+                  <option value="session">Session carryover</option>
+                  <option value="project">Project context</option>
+                </select>
+              </label>
+            </div>
+            <div class="metrics-strip">
+              <div><span>Latency</span><strong data-role="latency">—</strong></div>
+              <div><span>Tokens</span><strong data-role="tokens">—</strong></div>
+              <div><span>Cost</span><strong data-role="cost">—</strong></div>
+            </div>
+            <div class="response-card" data-role="response"></div>
+          </article>
+
+          <article class="panel-card" data-panel="right">
+            <div class="panel-head">
+              <div>
+                <div class="section-label">PANEL B</div>
+                <h3>Structured analyst</h3>
+              </div>
+              <span class="chip alt">More context</span>
+            </div>
+            <div class="control-grid">
+              <label>
+                <span>Prompt preset</span>
+                <select data-role="promptPreset">
+                  <option value="analyst">Analyst breakdown</option>
+                  <option value="operator">Operator brief</option>
+                  <option value="builder">Builder handoff</option>
+                </select>
+              </label>
+              <label>
+                <span>Model preset</span>
+                <select data-role="modelPreset">
+                  <option value="deep">Deep reasoning mock</option>
+                  <option value="gpt54">GPT-5.4 balanced</option>
+                  <option value="fast">Fast local mock</option>
+                </select>
+              </label>
+              <label>
+                <span>Memory mode</span>
+                <select data-role="memoryMode">
+                  <option value="project">Project context</option>
+                  <option value="session">Session carryover</option>
+                  <option value="none">No memory</option>
+                </select>
+              </label>
+            </div>
+            <div class="metrics-strip">
+              <div><span>Latency</span><strong data-role="latency">—</strong></div>
+              <div><span>Tokens</span><strong data-role="tokens">—</strong></div>
+              <div><span>Cost</span><strong data-role="cost">—</strong></div>
+            </div>
+            <div class="response-card" data-role="response"></div>
+          </article>
+        </section>
+
+        <section class="notes-grid">
+          <article class="note-card">
+            <div class="section-label">WHY THIS SHELL EXISTS</div>
+            <p>
+              Most chat UIs optimize for one conversation thread. This shell is
+              biased toward inspection: same input, different setup, visible
+              tradeoffs.
+            </p>
+          </article>
+          <article class="note-card">
+            <div class="section-label">FIRST-RUN SCOPE</div>
+            <p>
+              The current build is intentionally local and mocked. The point is
+              to prove the compare interaction and project shape before wiring
+              real providers.
+            </p>
+          </article>
+          <article class="note-card">
+            <div class="section-label">NEXT STEP</div>
+            <p>
+              Real provider adapters, saved runs, import/export, and screenshot-
+              friendly result states are the next obvious upgrades.
+            </p>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
