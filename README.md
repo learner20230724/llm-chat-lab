@@ -27,7 +27,7 @@
 - 📊 **Comparison bar** — after both panels run, a diff strip shows latency / token / cost with the winner highlighted in green
 - 💾 **Auto-save & restore** — panel layout persists to localStorage automatically; reload and pick up where you left off
 - 📤 **Import / export** — download your current layout as JSON, share it, import it back in one click
-- 🔌 **Real provider ready** — set `OPENAI_API_KEY` and the backend switches from mock to live calls; comparison bar works with real responses too
+- 🔌 **Multi-provider ready** — `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` activates live calls; compare GPT-4o vs Claude Sonnet 4 in one run, side by side
 
 ## What this project is
 
@@ -40,7 +40,7 @@ The current version is deliberately small, but it already proves the product sha
 - two side-by-side panels
 - independent presets per panel
 - visible latency / token / cost snapshots
-- mocked local responses so the shell is runnable before provider wiring
+- mocked responses so the shell is runnable without any API key
 
 ## Why this exists
 
@@ -67,7 +67,7 @@ Current scope:
 - memory mode selector
 - mock result generation
 - lightweight metrics strip
-- OpenAI provider adapter (`OPENAI_API_KEY` env var activates live calls; without it falls back to mock)
+- OpenAI + Anthropic provider adapters (`OPENAI_API_KEY` / `ANTHROPIC_API_KEY` env vars; either one activates live calls)
 - auto-save panel layout to localStorage
 - export/import layout as JSON
 
@@ -105,7 +105,7 @@ Near-term priorities (completed items are struck through):
 - ~~support import / export of run snapshots~~ — export button downloads JSON, import button loads it back
 - ~~add screenshot-friendly share states~~ — export suppresses UI chrome (toast hidden during export); response cards auto-size to content; muted save notices
 - ~~widen panel layouts beyond 2-column compare~~ — tighter panel gap + reduced response card min-height give panels more usable width
-- add real provider adapters behind the current mock layer — partial: `/api/compare` + `/api/status` backend wired, `OPENAI_API_KEY` env var activates live calls
+- ~~add real provider adapters behind the current mock layer~~ — done: `OPENAI_API_KEY` and `ANTHROPIC_API_KEY` both activate live calls; model dropdown lets you pick GPT-4o mini, GPT-4o, Claude Sonnet 4, or Claude Opus 4 per panel
 - ~~track richer metrics and prompt diffs~~ — comparison bar appears after both panels run; shows latency, token, and cost diffs with winner highlighted
 
 ## Project structure

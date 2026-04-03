@@ -30,7 +30,7 @@
 - 两个并排比较面板
 - 每个面板独立配置 preset
 - 可见的 latency / token / cost 快照
-- 本地 mock 响应，让壳子在接真实 provider 之前就能先跑起来
+- 本地 mock 响应，不设任何 API key 也能跑起来
 
 ## 为什么做这个
 
@@ -57,7 +57,7 @@
 - memory mode selector
 - mock 结果生成
 - 轻量 metrics strip
-- OpenAI provider adapter（设 `OPENAI_API_KEY` 环境变量即走真实调用，否则降级 mock）
+- OpenAI + Anthropic provider adapters（设 `OPENAI_API_KEY` 或 `ANTHROPIC_API_KEY` 环境变量即走真实调用）
 - 面板布局自动保存到 localStorage，重载后恢复
 - 导出/导入布局为 JSON 文件
 
@@ -95,7 +95,7 @@ http://localhost:4173
 - ~~支持运行快照导入导出~~ — 导出按钮下载 JSON，导入按钮加载
 - ~~增加适合截图和分享的 share state~~ — 导出时自动隐藏 UI 干扰元素（toast 静默）；response card 高度自适应内容；save notice 改为低调样式
 - ~~把布局从 2-column compare 扩到更多形态~~ — 缩小面板间距 + 降低 response card 最小高度，让面板可用宽度更大
-- 在当前 mock 层后面接真实 provider adapters — 部分完成：`/api/compare` + `/api/status` 后端已就绪，设 `OPENAI_API_KEY` 环境变量即走真实调用
+- ~~在当前 mock 层后面接真实 provider adapters~~ — 已完成：支持 `OPENAI_API_KEY` 和 `ANTHROPIC_API_KEY`；model 下拉框可选择 GPT-4o mini、GPT-4o、Claude Sonnet 4、Claude Opus 4
 - ~~记录更丰富的 metrics 和 prompt diff~~ — 对比完成后显示对比条，展示 latency / token / cost 差异并高亮优胜方
 
 ## 项目结构
