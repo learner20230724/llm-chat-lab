@@ -14,7 +14,7 @@
   <a href="./package.json"><img src="https://img.shields.io/badge/status-runnable%20shell-6f42c1" alt="Status"></a>
 </p>
 
-![llm-chat-lab hero preview](./docs/hero-preview.svg)
+![llm-chat-lab hero preview](./docs/hero-preview.png)
 
 > English | [简体中文](./README.zh-CN.md)
 
