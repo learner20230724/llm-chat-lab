@@ -92,9 +92,9 @@ http://localhost:4173
 接下来优先做这些（已完成项用删除线标注）：
 - ~~保存 compare runs~~ — 面板布局自动存入 localStorage，重启后恢复
 - ~~支持运行快照导入导出~~ — 导出按钮下载 JSON，导入按钮加载
+- ~~增加适合截图和分享的 share state~~ — 导出时自动隐藏 UI 干扰元素（toast 静默）；response card 高度自适应内容；save notice 改为低调样式
+- ~~把布局从 2-column compare 扩到更多形态~~ — 缩小面板间距 + 降低 response card 最小高度，让面板可用宽度更大
 - 在当前 mock 层后面接真实 provider adapters — 部分完成：`/api/compare` + `/api/status` 后端已就绪，设 `OPENAI_API_KEY` 环境变量即走真实调用
-- 增加适合截图和分享的 share state
-- 把布局从 2-column compare 扩到更多形态
 - 记录更丰富的 metrics 和 prompt diff
 
 ## 项目结构

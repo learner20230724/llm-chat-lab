@@ -84,6 +84,11 @@ function loadConfig(cfg) {
 
 // ── Export / Import ───────────────────────────────────────────────────────────
 function exportLayout() {
+  // Suppress save-toast for the duration so exported screenshots stay clean
+  let prev = saveNotice.textContent;
+  saveNotice.style.opacity = '0';
+  const cleanUp = () => { saveNotice.textContent = prev; saveNotice.style.opacity = '1'; };
+
   const cfg = currentConfig();
   const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
@@ -94,6 +99,9 @@ function exportLayout() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+
+  // Restore toast after a moment so user still gets feedback
+  setTimeout(cleanUp, 400);
 }
 
 function importLayout(file) {

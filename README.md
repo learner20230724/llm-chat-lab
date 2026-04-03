@@ -92,9 +92,9 @@ http://localhost:4173
 Near-term priorities (completed items are struck through):
 - ~~add saved compare runs~~ — layouts auto-saved to localStorage, restored on reload
 - ~~support import / export of run snapshots~~ — export button downloads JSON, import button loads it back
+- ~~add screenshot-friendly share states~~ — export suppresses UI chrome (toast hidden during export); response cards auto-size to content; muted save notices
+- ~~widen panel layouts beyond 2-column compare~~ — tighter panel gap + reduced response card min-height give panels more usable width
 - add real provider adapters behind the current mock layer — partial: `/api/compare` + `/api/status` backend wired, `OPENAI_API_KEY` env var activates live calls
-- add screenshot-friendly share states
-- widen panel layouts beyond 2-column compare
 - track richer metrics and prompt diffs
 
 ## Project structure
