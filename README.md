@@ -46,7 +46,7 @@ That gap matters if you are:
 
 ## First runnable slice
 
-The first runnable shell focuses on one job: make “same input, different setup” obvious in under a minute.
+The first runnable shell focuses on one job: make "same input, different setup" obvious in under a minute.
 
 Current scope:
 - local web UI
@@ -112,25 +112,16 @@ llm-chat-lab/
   package.json
 ```
 
-## README notes from strong open-source projects
-
-A few patterns from mature projects are worth borrowing here:
-- a clear one-line statement near the top
-- badges kept compact instead of noisy
-- a strong visual immediately visible on first screen
-- a short “what this is” section before the long explanation
-- an honest quickstart that gets people running fast
-- roadmap and boundaries written plainly instead of using inflated AI language
-
-That is the writing direction for this repo too: product-facing, concise, and credible.
-
 ## Documentation
 
 - [Positioning](./docs/positioning.md)
 - [MVP](./docs/mvp.md)
 - [Landscape](./docs/landscape.md)
-- [README Benchmark Notes](./docs/readme-benchmark-notes.md)
 
 ## License
 
 MIT
+
+## Star history
+
+[![Star History Chart](https://api.star-history.com/svg?repos=learner20230724/llm-chat-lab&type=Date)](https://star-history.com/#learner20230724/llm-chat-lab&Date)

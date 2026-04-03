@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  这个项目从一个很简单的判断出发：大多数聊天产品优化的是“聊起来顺不顺”，不是“为什么这个配置和那个配置表现不同”。
+  这个项目从一个很简单的判断出发：大多数聊天产品优化的是"聊起来顺不顺"，不是"为什么这个配置和那个配置表现不同"。
 </p>
 
 <p align="center">
@@ -33,7 +33,7 @@
 
 ## 为什么做这个
 
-聊天 UI 已经很多了，但大多数都在优化“聊天”。真正把“比较”当主任务的并不多。
+聊天 UI 已经很多了，但大多数都在优化"聊天"。真正把"比较"当主任务的并不多。
 
 这个空位对下面这些人其实很重要：
 - 在做 LLM 应用的人
@@ -46,7 +46,7 @@
 
 ## 第一版可运行壳子
 
-第一版的目标很明确：让人打开后，在一分钟内理解“同一输入，不同配置”的价值。
+第一版的目标很明确：让人打开后，在一分钟内理解"同一输入，不同配置"的价值。
 
 当前范围：
 - 本地 web UI
@@ -82,7 +82,7 @@ http://localhost:4173
 
 - compare-first 的聊天工作台应该是什么手感
 - 同一输入在不同 operator style 下应该如何呈现差异
-- 为什么“可见配置”本身就是产品的一部分，而不只是实现细节
+- 为什么"可见配置"本身就是产品的一部分，而不只是实现细节
 - 一个已经能截图、能放进 README 首屏的 UI 方向
 
 ## 路线图
@@ -112,25 +112,16 @@ llm-chat-lab/
   package.json
 ```
 
-## 从成熟开源项目 README 借什么
-
-这次 README 的写法会刻意借鉴那些成熟项目常见的结构：
-- 顶部先有一句清楚的定位
-- badge 保持克制，不做信息噪音
-- 首屏要立刻看到视觉资产
-- 先快速说清 “what this is”，再进入展开说明
-- quickstart 要短，确保能马上跑起来
-- roadmap 和边界要写得诚实，不用夸张 AI 话术
-
-这个仓库也会按这个方向写：更像真实产品项目，而不是 demo 说明文。
-
 ## 文档
 
 - [Positioning](./docs/positioning.md)
 - [MVP](./docs/mvp.md)
 - [Landscape](./docs/landscape.md)
-- [README Benchmark Notes](./docs/readme-benchmark-notes.md)
 
 ## License
 
 MIT
+
+## Star history
+
+[![Star History Chart](https://api.star-history.com/svg?repos=learner20230724/llm-chat-lab&type=Date)](https://star-history.com/#learner20230724/llm-chat-lab&Date)
