@@ -11,10 +11,13 @@ const MEMORY_MODES = {
   project: 'Assume active project context and optimize for continuity.',
 };
 
+// provider:model → display config; provider 'mock' means no live call
 const MODEL_PRESETS = {
-  gpt54: { label: 'GPT-5.4 balanced', latency: '1.8s', tokenBias: 1.0, cost: '$0.012' },
-  fast:  { label: 'Fast local mock',   latency: '0.8s', tokenBias: 0.7, cost: '$0.004' },
-  deep:  { label: 'Deep reasoning',    latency: '3.1s', tokenBias: 1.35, cost: '$0.021' },
+  'mock':                   { label: 'Mock (no API key)',   latency: '<1ms', tokens: '—', cost: '$0' },
+  'openai:gpt-4o-mini':     { label: 'GPT-4o mini',          latency: '~1s',  tokens: '—', cost: '$0.015' },
+  'openai:gpt-4o':          { label: 'GPT-4o',               latency: '~2s',  tokens: '—', cost: '$0.09' },
+  'anthropic:claude-sonnet-4': { label: 'Claude Sonnet 4',  latency: '~1s',  tokens: '—', cost: '$0.003' },
+  'anthropic:claude-opus-4':    { label: 'Claude Opus 4',   latency: '~2s',  tokens: '—', cost: '$0.015' },
 };
 
 const STORAGE_KEY = 'llm-chat-lab-panels';
@@ -147,7 +150,7 @@ function applySnapshot(snap) {
   panelEls.forEach((el, i) => {
     if (snap[i]) {
       el.querySelector('[data-role="promptPreset"]').value = snap[i].promptPreset || 'operator';
-      el.querySelector('[data-role="modelPreset"]').value  = snap[i].modelPreset  || 'gpt54';
+      el.querySelector('[data-role="modelPreset"]').value  = snap[i].modelPreset  || 'mock';
       el.querySelector('[data-role="memoryMode"]').value   = snap[i].memoryMode   || 'none';
     }
   });
@@ -238,15 +241,15 @@ function renderPanelMock(panelEl, side) {
   const modelPreset  = panelEl.querySelector('[data-role="modelPreset"]').value;
   const memoryMode   = panelEl.querySelector('[data-role="memoryMode"]').value;
   const prompt       = sharedInput.value;
-  const model        = MODEL_PRESETS[modelPreset];
+  const modelCfg     = MODEL_PRESETS[modelPreset] || MODEL_PRESETS['mock'];
 
-  panelEl.querySelector('[data-role="latency"]').textContent = model.latency;
-  panelEl.querySelector('[data-role="tokens"]').textContent  = '—';
-  panelEl.querySelector('[data-role="cost"]').textContent    = model.cost;
+  panelEl.querySelector('[data-role="latency"]').textContent = modelCfg.latency;
+  panelEl.querySelector('[data-role="tokens"]').textContent  = modelCfg.tokens;
+  panelEl.querySelector('[data-role="cost"]').textContent    = modelCfg.cost;
   panelEl.querySelector('[data-role="response"]').textContent = buildMockResponse({
     prompt, promptPreset, memoryMode, side,
   });
-  results[side] = { latency: model.latency, tokens: '—', cost: model.cost, model: model.label };
+  results[side] = { latency: modelCfg.latency, tokens: modelCfg.tokens, cost: modelCfg.cost, model: modelCfg.label };
 }
 
 // ── Call backend API ───────────────────────────────────────────────────────────
@@ -254,8 +257,12 @@ async function fetchReply(panelEl, side) {
   const promptPreset = panelEl.querySelector('[data-role="promptPreset"]').value;
   const memoryMode   = panelEl.querySelector('[data-role="memoryMode"]').value;
   const modelPreset  = panelEl.querySelector('[data-role="modelPreset"]').value;
-  const modelLabel   = MODEL_PRESETS[modelPreset]?.label || modelPreset;
+  const modelCfg     = MODEL_PRESETS[modelPreset] || MODEL_PRESETS['mock'];
   const prompt       = sharedInput.value;
+
+  // Parse provider:model from preset value, e.g. "anthropic:claude-sonnet-4"
+  const isMock = modelPreset === 'mock';
+  const [provider] = modelPreset.split(':');
 
   panelEl.querySelector('[data-role="response"]').textContent = '…';
   panelEl.querySelector('[data-role="latency"]').textContent  = '…';
@@ -263,26 +270,30 @@ async function fetchReply(panelEl, side) {
   panelEl.querySelector('[data-role="cost"]').textContent     = '…';
 
   try {
+    const body = { preset: promptPreset, memoryMode, prompt };
+    if (!isMock) body.provider = provider;
     const res = await fetch('/api/compare', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ preset: promptPreset, memoryMode, prompt }),
+      body: JSON.stringify(body),
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
-    const lat = json.latency || '—';
-    const tok = json.tokens ? `${json.tokens} tok` : '—';
-    const cost = json.cost || '—';
+    const lat   = json.latency || '—';
+    const tok   = json.tokens ? `${json.tokens} tok` : '—';
+    const cost  = json.cost || '—';
+    const label = json.model || modelCfg.label;
     panelEl.querySelector('[data-role="latency"]').textContent = lat;
     panelEl.querySelector('[data-role="tokens"]').textContent  = tok;
     panelEl.querySelector('[data-role="cost"]').textContent    = cost;
     panelEl.querySelector('[data-role="response"]').textContent = json.text;
-    results[side] = { latency: lat, tokens: tok, cost, model: modelLabel };
+    results[side] = { latency: lat, tokens: tok, cost, model: label };
   } catch (err) {
-    panelEl.querySelector('[data-role="response"]').textContent = `[error] ${err.message}\n\nFalling back to mock.`;
+    // Fall back to mock for this panel
     renderPanelMock(panelEl, side);
+    panelEl.querySelector('[data-role="response"]').textContent =
+      `[error] ${err.message}\n\nFell back to mock.`;
   }
-  updateCompareBar();
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
