@@ -106,7 +106,7 @@ llm-chat-lab/
     styles.css
     app.js
   docs/
-    hero-preview.svg
+    hero-preview.png
     positioning.md
     mvp.md
     landscape.md

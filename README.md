@@ -18,6 +18,16 @@
 
 > English | [简体中文](./README.zh-CN.md)
 
+## Features
+
+- 🔄 **Side-by-side comparison** — two independent panels, one shared input; run both with a single click and read the diff directly
+- 🎛️ **Three prompt presets** — Operator brief (concise/actionable), Analyst breakdown (structured/tradeoff-heavy), Builder handoff (spec-first/engineering-ready)
+- 🧠 **Three memory modes** — none, session, project; inspect how continuity assumptions change the output
+- 📊 **Comparison bar** — after both panels run, a diff strip shows latency / token / cost with the winner highlighted in green
+- 💾 **Auto-save & restore** — panel layout persists to localStorage automatically; reload and pick up where you left off
+- 📤 **Import / export** — download your current layout as JSON, share it, import it back in one click
+- 🔌 **Real provider ready** — set `OPENAI_API_KEY` and the backend switches from mock to live calls; comparison bar works with real responses too
+
 ## What this project is
 
 `llm-chat-lab` is a compare-first workspace for testing the same input against different chat setups.
@@ -106,7 +116,7 @@ llm-chat-lab/
     styles.css
     app.js
   docs/
-    hero-preview.svg
+    hero-preview.png
     positioning.md
     mvp.md
     landscape.md
