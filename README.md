@@ -56,7 +56,9 @@ Current scope:
 - memory mode selector
 - mock result generation
 - lightweight metrics strip
-- no backend, no accounts, no provider setup
+- OpenAI provider adapter (`OPENAI_API_KEY` env var activates live calls; without it falls back to mock)
+- auto-save panel layout to localStorage
+- export/import layout as JSON
 
 ## Design principles
 
@@ -87,10 +89,10 @@ http://localhost:4173
 
 ## Roadmap
 
-Near-term priorities:
-- add saved compare runs
-- support import / export of run snapshots
-- add real provider adapters behind the current mock layer
+Near-term priorities (completed items are struck through):
+- ~~add saved compare runs~~ — layouts auto-saved to localStorage, restored on reload
+- ~~support import / export of run snapshots~~ — export button downloads JSON, import button loads it back
+- add real provider adapters behind the current mock layer — partial: `/api/compare` + `/api/status` backend wired, `OPENAI_API_KEY` env var activates live calls
 - add screenshot-friendly share states
 - widen panel layouts beyond 2-column compare
 - track richer metrics and prompt diffs

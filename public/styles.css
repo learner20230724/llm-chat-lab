@@ -333,3 +333,11 @@ textarea {
     flex-direction: column;
   }
 }
+
+.save-notice {
+  font-size: 0.8rem;
+  color: var(--accent, #3b82f6);
+  align-self: center;
+  padding-left: 8px;
+  pointer-events: none;
+}

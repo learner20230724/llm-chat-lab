@@ -56,7 +56,9 @@
 - memory mode selector
 - mock 结果生成
 - 轻量 metrics strip
-- 不依赖后端、不需要账号、不需要 provider 配置
+- OpenAI provider adapter（设 `OPENAI_API_KEY` 环境变量即走真实调用，否则降级 mock）
+- 面板布局自动保存到 localStorage，重载后恢复
+- 导出/导入布局为 JSON 文件
 
 ## 设计原则
 
@@ -87,10 +89,10 @@ http://localhost:4173
 
 ## 路线图
 
-接下来优先做这些：
-- 保存 compare runs
-- 支持运行快照导入导出
-- 在当前 mock 层后面接真实 provider adapters
+接下来优先做这些（已完成项用删除线标注）：
+- ~~保存 compare runs~~ — 面板布局自动存入 localStorage，重启后恢复
+- ~~支持运行快照导入导出~~ — 导出按钮下载 JSON，导入按钮加载
+- 在当前 mock 层后面接真实 provider adapters — 部分完成：`/api/compare` + `/api/status` 后端已就绪，设 `OPENAI_API_KEY` 环境变量即走真实调用
 - 增加适合截图和分享的 share state
 - 把布局从 2-column compare 扩到更多形态
 - 记录更丰富的 metrics 和 prompt diff

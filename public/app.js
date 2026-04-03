@@ -1,31 +1,122 @@
-// ── Preset definitions (shared with server) ──────────────────────────────────
-const promptPresets = {
+// ── Built-in preset definitions ─────────────────────────────────────────────
+const PROMPT_PRESETS = {
   operator: { label: 'Operator brief' },
   analyst:  { label: 'Analyst breakdown' },
   builder:  { label: 'Builder handoff' },
 };
 
-const modelPresets = {
-  gpt54: { label: 'GPT-5.4 balanced', latency: '1.8s', tokenBias: 1.0, cost: '$0.012' },
-  fast:  { label: 'Fast local mock',   latency: '0.8s', tokenBias: 0.7, cost: '$0.004' },
-  deep:  { label: 'Deep reasoning',    latency: '3.1s', tokenBias: 1.35, cost: '$0.021' },
-};
-
-const memoryModes = {
+const MEMORY_MODES = {
   none:    'No carryover. Treat this as a clean run.',
   session: 'Use short session continuity and preserve recent decisions.',
   project: 'Assume active project context and optimize for continuity.',
 };
 
-// ── DOM refs ───────────────────────────────────────────────────────────────────
-const panelEls  = [...document.querySelectorAll('.panel-card')];
-const runButton  = document.getElementById('runButton');
-const swapButton = document.getElementById('swapButton');
-const sharedInput = document.getElementById('sharedInput');
+const MODEL_PRESETS = {
+  gpt54: { label: 'GPT-5.4 balanced', latency: '1.8s', tokenBias: 1.0, cost: '$0.012' },
+  fast:  { label: 'Fast local mock',   latency: '0.8s', tokenBias: 0.7, cost: '$0.004' },
+  deep:  { label: 'Deep reasoning',    latency: '3.1s', tokenBias: 1.35, cost: '$0.021' },
+};
 
-// ── Render panel (local mock fallback) ───────────────────────────────────────
+const STORAGE_KEY = 'llm-chat-lab-panels';
+
+// ── DOM refs ─────────────────────────────────────────────────────────────────
+const panelEls    = [...document.querySelectorAll('.panel-card')];
+const runButton   = document.getElementById('runButton');
+const swapButton  = document.getElementById('swapButton');
+const sharedInput = document.getElementById('sharedInput');
+const saveNotice  = document.getElementById('saveNotice');
+const exportBtn   = document.getElementById('exportBtn');
+const importBtn   = document.getElementById('importBtn');
+const importInput = document.getElementById('importInput');
+
+// ── Persist / restore ─────────────────────────────────────────────────────────
+function getStored() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
+}
+
+function putStored(cfg) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+  flashNotice('saved');
+}
+
+function flashNotice(type) {
+  if (!saveNotice) return;
+  saveNotice.textContent = type === 'saved' ? '✓ layout saved' : type === 'loaded' ? '✓ layout loaded' : '';
+  saveNotice.style.opacity = '1';
+  clearTimeout(saveNotice._t);
+  saveNotice._t = setTimeout(() => { saveNotice.style.opacity = '0'; }, 1800);
+}
+
+function snapshotPanels() {
+  return panelEls.map((el) => ({
+    promptPreset: el.querySelector('[data-role="promptPreset"]').value,
+    modelPreset:  el.querySelector('[data-role="modelPreset"]').value,
+    memoryMode:   el.querySelector('[data-role="memoryMode"]').value,
+  }));
+}
+
+function applySnapshot(snap) {
+  if (!Array.isArray(snap) || snap.length < 2) return false;
+  panelEls.forEach((el, i) => {
+    if (snap[i]) {
+      el.querySelector('[data-role="promptPreset"]').value = snap[i].promptPreset || 'operator';
+      el.querySelector('[data-role="modelPreset"]').value  = snap[i].modelPreset  || 'gpt54';
+      el.querySelector('[data-role="memoryMode"]').value   = snap[i].memoryMode   || 'none';
+    }
+  });
+  return true;
+}
+
+function currentConfig() {
+  return {
+    version: 1,
+    sharedInput: sharedInput.value,
+    panels: snapshotPanels(),
+  };
+}
+
+function loadConfig(cfg) {
+  if (!cfg || cfg.version !== 1) return false;
+  if (cfg.sharedInput !== undefined) sharedInput.value = cfg.sharedInput;
+  if (cfg.panels) applySnapshot(cfg.panels);
+  return true;
+}
+
+// ── Export / Import ───────────────────────────────────────────────────────────
+function exportLayout() {
+  const cfg = currentConfig();
+  const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'llm-chat-lab-layout.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importLayout(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const cfg = JSON.parse(e.target.result);
+      if (loadConfig(cfg)) {
+        flashNotice('loaded');
+        runCompare();
+      } else {
+        alert('Unrecognized layout file format.');
+      }
+    } catch {
+      alert('Failed to parse layout file.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ── Render mock response ───────────────────────────────────────────────────────
 function buildMockResponse({ prompt, promptPreset, memoryMode, side }) {
-  const preset = promptPresets[promptPreset];
+  const preset = PROMPT_PRESETS[promptPreset];
   const opening = side === 'left'
     ? 'This setup optimizes for speed and operator clarity.'
     : 'This setup optimizes for inspection and structured tradeoffs.';
@@ -37,7 +128,7 @@ function buildMockResponse({ prompt, promptPreset, memoryMode, side }) {
   return [
     opening, '',
     `Prompt preset: ${preset.label}`,
-    `Memory mode: ${memoryModes[memoryMode]}`, '',
+    `Memory mode: ${MEMORY_MODES[memoryMode]}`, '',
     `Input under test: "${prompt.trim()}"`, '',
     recommendation, '',
     'Likely output shape:',
@@ -52,7 +143,7 @@ function renderPanelMock(panelEl, side) {
   const modelPreset  = panelEl.querySelector('[data-role="modelPreset"]').value;
   const memoryMode   = panelEl.querySelector('[data-role="memoryMode"]').value;
   const prompt       = sharedInput.value;
-  const model        = modelPresets[modelPreset];
+  const model        = MODEL_PRESETS[modelPreset];
 
   panelEl.querySelector('[data-role="latency"]').textContent = model.latency;
   panelEl.querySelector('[data-role="tokens"]').textContent  = '—';
@@ -91,9 +182,8 @@ async function fetchReply(panelEl, side) {
   }
 }
 
-// ── Actions ────────────────────────────────────────────────────────────────────
+// ── Actions ───────────────────────────────────────────────────────────────────
 async function runCompare() {
-  // Check if live backend is available
   try {
     const res = await fetch('/api/status');
     if (res.ok) {
@@ -118,15 +208,37 @@ function swapPanels() {
   runCompare();
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+function autoSave() {
+  putStored(currentConfig());
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
 runButton.addEventListener('click', runCompare);
 swapButton.addEventListener('click', swapPanels);
-sharedInput.addEventListener('input', runCompare);
+
+sharedInput.addEventListener('input', () => { autoSave(); runCompare(); });
+
 panelEls.forEach((panel) => {
-  panel.querySelectorAll('select').forEach((sel) => sel.addEventListener('change', runCompare));
+  panel.querySelectorAll('select').forEach((sel) => {
+    sel.addEventListener('change', () => { autoSave(); runCompare(); });
+  });
 });
 
-// Probe live backend; if unreachable stay in mock mode
+if (exportBtn) exportBtn.addEventListener('click', exportLayout);
+if (importBtn && importInput) {
+  importBtn.addEventListener('click', () => importInput.click());
+  importInput.addEventListener('change', () => {
+    if (importInput.files[0]) importLayout(importInput.files[0]);
+    importInput.value = '';
+  });
+}
+
+// Restore saved layout or run mock probe
+const stored = getStored();
+if (stored && loadConfig(stored)) {
+  flashNotice('loaded');
+}
+
 fetch('/api/status').then((r) => {
   if (!r.ok) runCompare();
 }).catch(() => runCompare());

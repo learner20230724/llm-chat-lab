@@ -17,8 +17,8 @@ const contentTypes = {
   '.png': 'image/png',
 };
 
-// ── Prompt presets ────────────────────────────────────────────────────────────
-const promptPresets = {
+// ── Preset definitions ────────────────────────────────────────────────────────
+const PROMPT_PRESETS = {
   operator: {
     label: 'Operator brief',
     system: 'You are a concise operator. Give direct, compressed, next-step oriented advice. Prefer short sentences and actionable bullets.',
@@ -33,15 +33,21 @@ const promptPresets = {
   },
 };
 
-const memoryModes = {
+const MEMORY_MODES = {
   none: 'No carryover. Treat this as a clean run.',
   session: 'Use short session continuity and preserve recent decisions.',
   project: 'Assume active project context and optimize for continuity.',
 };
 
+const MODEL_PRESETS = {
+  gpt54: { label: 'GPT-5.4 balanced', latency: '1.8s', tokenBias: 1.0, cost: '$0.012' },
+  fast:  { label: 'Fast local mock',   latency: '0.8s', tokenBias: 0.7, cost: '$0.004' },
+  deep:  { label: 'Deep reasoning',    latency: '3.1s', tokenBias: 1.35, cost: '$0.021' },
+};
+
 // ── Mock response generator ──────────────────────────────────────────────────
-function mockResponse({ preset, modelLabel, memoryMode, prompt }) {
-  const p = promptPresets[preset];
+function mockResponse({ preset, memoryMode, prompt }) {
+  const p = PROMPT_PRESETS[preset];
   const openings = {
     left: 'This setup optimizes for speed and operator clarity.',
     right: 'This setup optimizes for inspection and structured tradeoffs.',
@@ -55,7 +61,7 @@ function mockResponse({ preset, modelLabel, memoryMode, prompt }) {
     openings[Math.random() > 0.5 ? 'left' : 'right'],
     '',
     `Prompt preset: ${p.label}`,
-    `Memory mode: ${memoryModes[memoryMode]}`,
+    `Memory mode: ${MEMORY_MODES[memoryMode]}`,
     '',
     `Input: "${prompt.trim()}"`,
     '',
@@ -70,8 +76,8 @@ function mockResponse({ preset, modelLabel, memoryMode, prompt }) {
 
 // ── Real OpenAI call ─────────────────────────────────────────────────────────
 async function openaiReply({ preset, memoryMode, prompt }) {
-  const p = promptPresets[preset];
-  const mem = memoryModes[memoryMode];
+  const p = PROMPT_PRESETS[preset];
+  const mem = MEMORY_MODES[memoryMode];
   const start = Date.now();
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 60_000);
@@ -113,7 +119,14 @@ async function openaiReply({ preset, memoryMode, prompt }) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url || '/', `http://${req.headers.host}`);
 
-  // API proxy
+  // GET /api/presets — return built-in preset definitions
+  if (url.pathname === '/api/presets' && req.method === 'GET') {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ promptPresets: PROMPT_PRESETS, memoryModes: MEMORY_MODES, modelPresets: MODEL_PRESETS }));
+    return;
+  }
+
+  // POST /api/compare — run comparison
   if (url.pathname === '/api/compare' && req.method === 'POST') {
     let body = '';
     for await (const chunk of req) body += chunk;
@@ -123,11 +136,10 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify({ error: 'invalid JSON' }));
       return;
     }
-    const { preset = 'operator', model: _m, memoryMode = 'none', prompt = '' } = parsed;
+    const { preset = 'operator', memoryMode = 'none', prompt = '' } = parsed;
 
-    // If no API key, fall back to mock
     if (!apiKey) {
-      const text = mockResponse({ preset, modelLabel: 'mock', memoryMode, prompt });
+      const text = mockResponse({ preset, memoryMode, prompt });
       res.writeHead(200, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ text, latency: '<1ms', tokens: 0, cost: '$0', mock: true }));
       return;
@@ -144,7 +156,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Readiness check
+  // GET /api/status — readiness probe
   if (url.pathname === '/api/status' && req.method === 'GET') {
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify({ ok: true, hasApiKey: !!apiKey, model }));
