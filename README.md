@@ -95,7 +95,7 @@ Near-term priorities (completed items are struck through):
 - ~~add screenshot-friendly share states~~ — export suppresses UI chrome (toast hidden during export); response cards auto-size to content; muted save notices
 - ~~widen panel layouts beyond 2-column compare~~ — tighter panel gap + reduced response card min-height give panels more usable width
 - add real provider adapters behind the current mock layer — partial: `/api/compare` + `/api/status` backend wired, `OPENAI_API_KEY` env var activates live calls
-- track richer metrics and prompt diffs
+- ~~track richer metrics and prompt diffs~~ — comparison bar appears after both panels run; shows latency, token, and cost diffs with winner highlighted
 
 ## Project structure
 

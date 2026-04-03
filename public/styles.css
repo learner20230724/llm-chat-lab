@@ -175,8 +175,84 @@ body::before {
   padding: 18px;
 }
 
-.code-label {
-  margin-bottom: 10px;
+.compare-bar {
+  margin: 0 auto 20px;
+  max-width: 860px;
+}
+
+.compare-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 28px;
+}
+
+.compare-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 130px;
+  text-align: center;
+}
+
+.compare-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.compare-model {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.compare-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.compare-metric {
+  font-size: 0.78rem;
+  color: var(--text);
+}
+
+.compare-diff {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 150px;
+  text-align: center;
+}
+
+.diff-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.diff-arrow {
+  font-size: 0.9rem;
+}
+
+.diff-better {
+  color: var(--accent-2);
+}
+
+.diff-worse {
+  color: #ff8c6b;
+}
   color: var(--muted);
   font-size: 0.84rem;
 }

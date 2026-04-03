@@ -19,6 +19,9 @@ const MODEL_PRESETS = {
 
 const STORAGE_KEY = 'llm-chat-lab-panels';
 
+// Per-side results for the comparison bar
+const results = { left: null, right: null };
+
 // ── DOM refs ─────────────────────────────────────────────────────────────────
 const panelEls    = [...document.querySelectorAll('.panel-card')];
 const runButton   = document.getElementById('runButton');
@@ -29,7 +32,91 @@ const exportBtn   = document.getElementById('exportBtn');
 const importBtn   = document.getElementById('importBtn');
 const importInput = document.getElementById('importInput');
 
-// ── Persist / restore ─────────────────────────────────────────────────────────
+// ── Comparison bar ─────────────────────────────────────────────────────────────
+function parseLatency(s) {
+  if (!s || s === '…' || s === '—') return null;
+  const m = s.match(/^([\d.]+)/);
+  return m ? parseFloat(m[1]) : null;
+}
+function parseTokens(s) {
+  if (!s || s === '…' || s === '—') return null;
+  const m = s.match(/(\d+)/);
+  return m ? parseInt(m[1]) : null;
+}
+function parseCost(s) {
+  if (!s || s === '…' || s === '—') return null;
+  const m = s.match(/[\d.]+/);
+  return m ? parseFloat(m[0]) : null;
+}
+
+function updateCompareBar() {
+  const bar  = document.getElementById('compareBar');
+  const rL   = results.left;
+  const rR   = results.right;
+  if (!rL || !rR) { bar.hidden = true; return; }
+
+  // Populate labels and raw values
+  document.getElementById('compareModelL').textContent = rL.model;
+  document.getElementById('compareLatL').textContent  = rL.latency;
+  document.getElementById('compareTokL').textContent  = rL.tokens;
+  document.getElementById('compareCostL').textContent = rL.cost;
+  document.getElementById('compareModelR').textContent = rR.model;
+  document.getElementById('compareLatR').textContent  = rR.latency;
+  document.getElementById('compareTokR').textContent  = rR.tokens;
+  document.getElementById('compareCostR').textContent = rR.cost;
+
+  // Latency diff
+  const latL = parseLatency(rL.latency);
+  const latR = parseLatency(rR.latency);
+  const latTxt = document.getElementById('diffLatTxt');
+  const latRow = document.getElementById('diffLat');
+  if (latL !== null && latR !== null) {
+    const faster = latL < latR ? 'A' : latR < latL ? 'B' : 'tie';
+    const diff   = Math.abs(latL - latR).toFixed(1);
+    latTxt.textContent = `${diff}s (${faster} faster)`;
+    latRow.className = 'diff-row ' + (faster === 'A' ? 'diff-better' : faster === 'B' ? 'diff-worse' : '');
+  } else {
+    latTxt.textContent = '—';
+    latRow.className = 'diff-row';
+  }
+
+  // Token diff
+  const tokL = parseTokens(rL.tokens);
+  const tokR = parseTokens(rR.tokens);
+  const tokTxt = document.getElementById('diffTokTxt');
+  const tokRow = document.getElementById('diffTok');
+  if (tokL !== null && tokR !== null) {
+    const more  = tokL > tokR ? 'A' : tokR > tokL ? 'B' : 'tie';
+    const diff  = Math.abs(tokL - tokR);
+    tokTxt.textContent = `${diff} tok (${more} more)`;
+    tokRow.className = 'diff-row ' + (more === 'A' ? 'diff-worse' : more === 'B' ? 'diff-better' : '');
+  } else {
+    tokTxt.textContent = '—';
+    tokRow.className = 'diff-row';
+  }
+
+  // Cost diff
+  const costL = parseCost(rL.cost);
+  const costR = parseCost(rR.cost);
+  const costTxt = document.getElementById('diffCostTxt');
+  const costRow = document.getElementById('diffCost');
+  if (costL !== null && costR !== null) {
+    if (costL === 0 && costR === 0) {
+      costTxt.textContent = 'both $0';
+    } else {
+      const pricier = costL > costR ? 'A' : costR > costL ? 'B' : 'tie';
+      const ratio   = (costL > 0 && costR > 0) ? Math.max(costL, costR) / Math.min(costL, costR) : null;
+      const ratioStr = ratio ? ` (${ratio.toFixed(1)}×)` : '';
+      costTxt.textContent = `${pricier} pricier${ratioStr}`;
+      costRow.className = 'diff-row ' + (pricier === 'A' ? 'diff-worse' : pricier === 'B' ? 'diff-better' : '');
+    }
+  } else {
+    costTxt.textContent = '—';
+    costRow.className = 'diff-row';
+  }
+
+  bar.hidden = false;
+}
 function getStored() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
 }
@@ -159,12 +246,15 @@ function renderPanelMock(panelEl, side) {
   panelEl.querySelector('[data-role="response"]').textContent = buildMockResponse({
     prompt, promptPreset, memoryMode, side,
   });
+  results[side] = { latency: model.latency, tokens: '—', cost: model.cost, model: model.label };
 }
 
 // ── Call backend API ───────────────────────────────────────────────────────────
 async function fetchReply(panelEl, side) {
   const promptPreset = panelEl.querySelector('[data-role="promptPreset"]').value;
   const memoryMode   = panelEl.querySelector('[data-role="memoryMode"]').value;
+  const modelPreset  = panelEl.querySelector('[data-role="modelPreset"]').value;
+  const modelLabel   = MODEL_PRESETS[modelPreset]?.label || modelPreset;
   const prompt       = sharedInput.value;
 
   panelEl.querySelector('[data-role="response"]').textContent = '…';
@@ -180,14 +270,19 @@ async function fetchReply(panelEl, side) {
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
-    panelEl.querySelector('[data-role="latency"]').textContent = json.latency;
-    panelEl.querySelector('[data-role="tokens"]').textContent  = json.tokens ? `${json.tokens} tok` : '—';
-    panelEl.querySelector('[data-role="cost"]').textContent    = json.cost || '—';
+    const lat = json.latency || '—';
+    const tok = json.tokens ? `${json.tokens} tok` : '—';
+    const cost = json.cost || '—';
+    panelEl.querySelector('[data-role="latency"]').textContent = lat;
+    panelEl.querySelector('[data-role="tokens"]').textContent  = tok;
+    panelEl.querySelector('[data-role="cost"]').textContent    = cost;
     panelEl.querySelector('[data-role="response"]').textContent = json.text;
+    results[side] = { latency: lat, tokens: tok, cost, model: modelLabel };
   } catch (err) {
     panelEl.querySelector('[data-role="response"]').textContent = `[error] ${err.message}\n\nFalling back to mock.`;
     renderPanelMock(panelEl, side);
   }
+  updateCompareBar();
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
@@ -204,6 +299,7 @@ async function runCompare() {
   } catch { /* fall through to mock */ }
   renderPanelMock(panelEls[0], 'left');
   renderPanelMock(panelEls[1], 'right');
+  updateCompareBar();
 }
 
 function swapPanels() {

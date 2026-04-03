@@ -95,7 +95,7 @@ http://localhost:4173
 - ~~增加适合截图和分享的 share state~~ — 导出时自动隐藏 UI 干扰元素（toast 静默）；response card 高度自适应内容；save notice 改为低调样式
 - ~~把布局从 2-column compare 扩到更多形态~~ — 缩小面板间距 + 降低 response card 最小高度，让面板可用宽度更大
 - 在当前 mock 层后面接真实 provider adapters — 部分完成：`/api/compare` + `/api/status` 后端已就绪，设 `OPENAI_API_KEY` 环境变量即走真实调用
-- 记录更丰富的 metrics 和 prompt diff
+- ~~记录更丰富的 metrics 和 prompt diff~~ — 对比完成后显示对比条，展示 latency / token / cost 差异并高亮优胜方
 
 ## 项目结构
 
