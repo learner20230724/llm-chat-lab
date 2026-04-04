@@ -11,7 +11,7 @@
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/runtime-Node%2022+-339933?logo=node.js&logoColor=white" alt="Node"></a>
-  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.4"><img src="https://img.shields.io/badge/release-v0.1.4-green.svg" alt="Release"></a>
+  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.5"><img src="https://img.shields.io/badge/release-v0.1.5-green.svg" alt="Release"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/status-runnable%20shell-6f42c1" alt="Status"></a>
   <a href="https://learner20230724.github.io/llm-chat-lab/docs/app/"><img src="https://img.shields.io/badge/demo-%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88-brightgreen" alt="Live Demo"></a>
 </p>
@@ -59,6 +59,19 @@
 GPT-4o mini vs Claude Sonnet 4 — 同一段 prompt，真实 API，可视化 diff：
 
 ![Compare GPT-4o mini vs Claude Sonnet 4](./docs/compare-preview.png)
+
+## 📋 示例对比
+
+工作台打开时会预载一个示例，第一次访问即可看到 UI 效果。使用工具栏中的 **📋 试试示例…** 下拉框可以切换：
+
+| 示例 | 左面板 | 右面板 | 演示内容 |
+|---|---|---|---|
+| 产品工作流 | GPT-4o mini / Operator | Claude Sonnet 4 / Analyst | 两种风格如何框架化上线通知工作流 |
+| 代码评审 | GPT-4o / Builder | Claude Opus 4 / Operator | Builder 规范 vs Operator 简洁指令 |
+| 数据分析 | Claude Sonnet 4 / Analyst | GPT-4o / Builder | 结构化分析 vs 工程交接式分析 |
+| 根因分析 | GPT-4o mini / Operator | Claude Sonnet 4 / Analyst | 简洁 vs 结构化：503 故障排查 |
+
+每个示例会自动配置两侧的 preset 和模型，点击 **Run compare** 即可看到对比效果。
 
 ## 为什么做这个
 

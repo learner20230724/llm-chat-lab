@@ -61,6 +61,13 @@
           </div>
           <div class="toolbar-actions">
             <button id="themeToggle" title="Toggle dark/light theme">🌙</button>
+            <select id="exampleSelect" title="Load a sample comparison" style="background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:4px;padding:4px 8px;font-size:13px;cursor:pointer">
+              <option value="">📋 Try an example…</option>
+              <option value="0">📝 Product workflow (Operator vs Analyst)</option>
+              <option value="1">💻 Code review (Builder vs Operator)</option>
+              <option value="2">📊 Data analysis (Analyst vs Builder)</option>
+              <option value="3">🔍 Root cause analysis (Operator vs Analyst)</option>
+            </select>
             <button id="runButton" class="button primary">Run compare</button>
             <button id="swapButton" class="button ghost">Swap panels</button>
             <button id="savePresetBtn" class="button ghost">Save as preset</button>

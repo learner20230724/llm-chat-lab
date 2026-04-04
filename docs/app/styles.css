@@ -612,3 +612,23 @@ body.theme-light .save-notice {
   color: var(--accent);
   background: var(--chip);
 }
+
+/* Example prompts dropdown */
+#exampleSelect {
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 5px 10px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+#exampleSelect:hover {
+  border-color: var(--accent);
+}
+
+body.theme-light #exampleSelect {
+  background: var(--bg);
+}

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] — 2026-04-04
+
+### Added
+- **Example comparisons** — toolbar dropdown with 4 pre-loaded sample prompts (product workflow, code review, data analysis, root-cause) that auto-configure preset + model on both panels; workspace opens with an example pre-loaded on first visit.
+
+### Changed
+- Workspace now shows a ready-to-run example immediately on first load, so visitors to the GitHub Pages demo see the UI in action without any setup.
+
 ## [0.1.4] — 2026-04-04
 
 ### Added

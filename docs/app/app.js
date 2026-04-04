@@ -20,8 +20,49 @@ const MODEL_PRESETS = {
   'anthropic:claude-opus-4':    { label: 'Claude Opus 4',   latency: '~2s',  tokens: '—', cost: '$0.015' },
 };
 
-const STORAGE_KEY      = 'llm-chat-lab-panels';
-const CUSTOM_PRESETS_KEY = 'llm-chat-lab-custom-presets';
+const STORAGE_KEY        = 'llm-chat-lab-panels';
+const CUSTOM_PRESETS_KEY  = 'llm-chat-lab-custom-presets';
+const EXAMPLES_SEEN_KEY   = 'llm-chat-lab-examples-seen';
+
+// ── Built-in example prompts ─────────────────────────────────────────────────
+const SAMPLE_EXAMPLES = [
+  {
+    id: 'product-launch',
+    label: 'Product workflow',
+    sharedInput: 'Design a lightweight review workflow for product launch notes. Keep it practical and avoid bloated process.',
+    leftPreset:  'operator',
+    leftModel:   'openai:gpt-4o-mini',
+    rightPreset: 'analyst',
+    rightModel:  'anthropic:claude-sonnet-4',
+  },
+  {
+    id: 'code-review',
+    label: 'Code review',
+    sharedInput: 'Write a Python decorator that retries a function up to 3 times with exponential backoff on exceptions.',
+    leftPreset:  'builder',
+    leftModel:   'openai:gpt-4o',
+    rightPreset: 'operator',
+    rightModel:  'anthropic:claude-opus-4',
+  },
+  {
+    id: 'data-analysis',
+    label: 'Data analysis',
+    sharedInput: 'A SaaS startup has these monthly metrics: MRR $12k→$18k, churn 5%→3%, CAC $200→$180. What does this tell you about product-market fit?',
+    leftPreset:  'analyst',
+    leftModel:   'anthropic:claude-sonnet-4',
+    rightPreset: 'builder',
+    rightModel:  'openai:gpt-4o',
+  },
+  {
+    id: 'root-cause',
+    label: 'Root cause analysis',
+    sharedInput: 'A REST API endpoint that worked fine for months suddenly starts returning 503s after a new version shipped last Tuesday. Walk through how you would diagnose this.',
+    leftPreset:  'operator',
+    leftModel:   'openai:gpt-4o-mini',
+    rightPreset: 'analyst',
+    rightModel:  'anthropic:claude-sonnet-4',
+  },
+];
 
 // ── Custom preset helpers ──────────────────────────────────────────────────────
 function getCustomPresets() {
@@ -258,6 +299,34 @@ function applySnapshot(snap) {
     el.querySelector('[data-role="memoryMode"]').value  = snap[i].memoryMode  || 'none';
   });
   return true;
+}
+
+function loadExample(idx) {
+  const ex = SAMPLE_EXAMPLES[idx];
+  if (!ex) return;
+
+  sharedInput.value = ex.sharedInput;
+
+  // Apply preset + model to each panel
+  const leftEl  = panelEls[0];
+  const rightEl = panelEls[1];
+  if (leftEl) {
+    leftEl.querySelector('[data-role="promptPreset"]').value = ex.leftPreset  || 'operator';
+    leftEl.querySelector('[data-role="modelPreset"]').value   = ex.leftModel   || 'mock';
+    leftEl.querySelector('[data-role="memoryMode"]').value   = 'none';
+  }
+  if (rightEl) {
+    rightEl.querySelector('[data-role="promptPreset"]').value = ex.rightPreset || 'analyst';
+    rightEl.querySelector('[data-role="modelPreset"]').value  = ex.rightModel  || 'mock';
+    rightEl.querySelector('[data-role="memoryMode"]').value   = 'none';
+  }
+
+  // Mark that the user has seen an example so we don't auto-load on future visits
+  localStorage.setItem(EXAMPLES_SEEN_KEY, '1');
+
+  // Scroll to the shared input
+  sharedInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  sharedInput.focus();
 }
 
 function currentConfig() {
@@ -543,6 +612,15 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
 });
 
+// Example prompts dropdown
+document.getElementById('exampleSelect').addEventListener('change', (e) => {
+  const idx = parseInt(e.target.value, 10);
+  if (!isNaN(idx)) {
+    loadExample(idx);
+    e.target.value = ''; // reset dropdown so same example can be re-selected
+  }
+});
+
 // Apply saved theme on load
 applyTheme(currentTheme);
 
@@ -600,6 +678,9 @@ sharedInput.addEventListener('keydown', (e) => {
 const stored = getStored();
 if (stored && loadConfig(stored)) {
   flashNotice('loaded');
+} else if (!localStorage.getItem(EXAMPLES_SEEN_KEY)) {
+  // First visit — pre-load example 0 so the workspace shows content immediately
+  loadExample(0);
 }
 
 fetch('/api/status').then((r) => {

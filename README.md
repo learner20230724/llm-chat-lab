@@ -11,7 +11,7 @@
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/runtime-Node%2022+-339933?logo=node.js&logoColor=white" alt="Node"></a>
-  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.4"><img src="https://img.shields.io/badge/release-v0.1.4-green.svg" alt="Release"></a>
+  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.5"><img src="https://img.shields.io/badge/release-v0.1.5-green.svg" alt="Release"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/status-runnable%20shell-6f42c1" alt="Status"></a>
   <a href="https://learner20230724.github.io/llm-chat-lab/docs/app/"><img src="https://img.shields.io/badge/demo-live%20%F0%9F%9F%A2-brightgreen" alt="Live Demo"></a>
 </p>
@@ -31,6 +31,20 @@
 - 🎨 **Custom preset save/load** — save your own system prompts as named presets; import/export custom presets with layout snapshots
 - 🔌 **Multi-provider ready** — `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` activates live calls; compare GPT-4o vs Claude Sonnet 4 in one run, side by side
 - 🌗 **Theme toggle** — switch between dark and light mode with the 🌙/☀️ button in the toolbar; preference saved to localStorage
+- 🎯 **Example comparisons** — pre-loaded sample prompts (product workflow, code review, data analysis, root-cause) with preset configurations ready to run instantly
+
+## 🎯 Example Comparisons
+
+The workspace opens with a ready-to-run example so you can see the UI in action immediately — no API keys needed. Use the **📋 Try an example…** dropdown in the toolbar to swap between:
+
+| Example | Left panel | Right panel | What it shows |
+|---|---|---|---|
+| Product workflow | GPT-4o mini / Operator | Claude Sonnet 4 / Analyst | How two styles frame a launch-note workflow differently |
+| Code review | GPT-4o / Builder | Claude Opus 4 / Operator | Builder spec vs operator brief on a Python decorator |
+| Data analysis | Claude Sonnet 4 / Analyst | GPT-4o / Builder | Analyst structured breakdown vs builder handoff on SaaS metrics |
+| Root cause analysis | GPT-4o mini / Operator | Claude Sonnet 4 / Analyst | How conciseness vs structure affects a 503 debugging walkthrough |
+
+Each example pre-configures the prompt preset and model on both sides — just hit **Run compare** to see the diff.
 
 ## Keyboard Shortcuts
 
