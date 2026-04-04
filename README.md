@@ -29,6 +29,12 @@
 - 📤 **Import / export** — download your current layout as JSON, share it, import it back in one click
 - 🔌 **Multi-provider ready** — `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` activates live calls; compare GPT-4o vs Claude Sonnet 4 in one run, side by side
 
+## Compare Preview
+
+GPT-4o mini vs Claude Sonnet 4 — same prompt, real providers, visible diff:
+
+![Compare GPT-4o mini vs Claude Sonnet 4](./docs/compare-preview.png)
+
 ## What this project is
 
 `llm-chat-lab` is a compare-first workspace for testing the same input against different chat setups.

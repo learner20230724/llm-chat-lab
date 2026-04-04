@@ -32,6 +32,12 @@
 - 可见的 latency / token / cost 快照
 - 本地 mock 响应，不设任何 API key 也能跑起来
 
+## 对比效果预览
+
+GPT-4o mini vs Claude Sonnet 4 — 同一段 prompt，真实 API，可视化 diff：
+
+![Compare GPT-4o mini vs Claude Sonnet 4](./docs/compare-preview.png)
+
 ## 为什么做这个
 
 聊天 UI 已经很多了，但大多数都在优化"聊天"。真正把"比较"当主任务的并不多。
