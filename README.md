@@ -11,7 +11,7 @@
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/runtime-Node%2022+-339933?logo=node.js&logoColor=white" alt="Node"></a>
-  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.3"><img src="https://img.shields.io/badge/release-v0.1.3-green.svg" alt="Release"></a>
+  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.4"><img src="https://img.shields.io/badge/release-v0.1.4-green.svg" alt="Release"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/status-runnable%20shell-6f42c1" alt="Status"></a>
   <a href="https://learner20230724.github.io/llm-chat-lab/docs/app/"><img src="https://img.shields.io/badge/demo-live%20%F0%9F%9F%A2-brightgreen" alt="Live Demo"></a>
 </p>
