@@ -632,3 +632,45 @@ body.theme-light .save-notice {
 body.theme-light #exampleSelect {
   background: var(--bg);
 }
+
+/* ── Keyboard shortcut hints ── */
+.kbd-hints {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: var(--text-dim, #888);
+  background: var(--panel-weak, #1e1e1e);
+  border-top: 1px solid var(--line, #333);
+  flex-wrap: wrap;
+}
+
+.kbd-hint {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+kbd {
+  display: inline-block;
+  padding: 1px 5px;
+  font-family: inherit;
+  font-size: 10px;
+  border: 1px solid var(--line, #444);
+  border-radius: 4px;
+  background: var(--panel, #2a2a2a);
+  color: var(--text-muted, #aaa);
+  line-height: 1.5;
+}
+
+body.theme-light .kbd-hints {
+  color: #666;
+  border-top-color: #e0e0e0;
+}
+
+body.theme-light kbd {
+  border-color: #ccc;
+  background: #f5f5f5;
+  color: #555;
+}
