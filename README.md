@@ -50,6 +50,8 @@ Each example pre-configures the prompt preset and model on both sides — just h
 
 ## Keyboard Shortcuts
 
+All shortcuts are shown in the **hints bar** at the top of the workspace. Full reference:
+
 | Shortcut | Action |
 |---|---|
 | `Ctrl+K` / `Cmd+K` | Focus the prompt input |
