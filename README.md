@@ -87,15 +87,18 @@ Current scope:
 ## Quickstart
 
 ```bash
-npm install
+cp .env.example .env
+# Edit .env and add your OPENAI_API_KEY and/or ANTHROPIC_API_KEY
 npm run dev
 ```
 
 Then open:
 
 ```text
-http://localhost:4173
+http://localhost:3000
 ```
+
+> **Tip:** The app runs without API keys in mock mode. Add at least one key in `.env` to activate live comparisons.
 
 ## What the current shell demonstrates
 
