@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] — 2026-04-04
+
+### Added
+- **Copy response button** — 📋 button appears on panel hover; copies the response text to clipboard with visual ✓ feedback.
+- **Estimated mock metrics** — mock responses now show ~token count (char÷4 estimate) and ~cost per model, making the compare bar fully functional even without a live API.
+
+### Fixed
+- **Compare bar not showing after live API response** — `runCompare()` now correctly calls `updateCompareBar()` after a successful `/api/compare` response.
+
 ## [0.1.3] — 2026-04-04
 
 ### Added
