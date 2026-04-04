@@ -11,7 +11,7 @@
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/runtime-Node%2022+-339933?logo=node.js&logoColor=white" alt="Node"></a>
-  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.0"><img src="https://img.shields.io/badge/release-v0.1.0-green.svg" alt="Release"></a>
+  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.1"><img src="https://img.shields.io/badge/release-v0.1.1-green.svg" alt="Release"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/status-runnable%20shell-6f42c1" alt="Status"></a>
 </p>
 
@@ -27,7 +27,20 @@
 - 📊 **Comparison bar** — after both panels run, a diff strip shows latency / token / cost with the winner highlighted in green
 - 💾 **Auto-save & restore** — panel layout persists to localStorage automatically; reload and pick up where you left off
 - 📤 **Import / export** — download your current layout as JSON, share it, import it back in one click
+- 🎨 **Custom preset save/load** — save your own system prompts as named presets; import/export custom presets with layout snapshots
 - 🔌 **Multi-provider ready** — `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` activates live calls; compare GPT-4o vs Claude Sonnet 4 in one run, side by side
+
+## Custom Presets
+
+Save your own system prompts as named presets and reuse them across sessions. Custom presets are embedded in layout snapshots and restored automatically when you import a layout.
+
+**Save a preset:** Click **"Save as preset"** in the toolbar → enter a name and system prompt → Ctrl+Enter to save.
+
+**Use a preset:** Select it from the preset dropdown — custom presets appear alongside the built-in ones.
+
+**Import/Export:** Layout JSON includes the full `customPresets` array. Share a layout file and the recipient gets both the panel setup and your custom presets.
+
+![Custom preset save/load UI](./docs/preset-save-modal.png)
 
 ## Compare Preview
 

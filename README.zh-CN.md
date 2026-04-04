@@ -11,7 +11,7 @@
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/runtime-Node%2022+-339933?logo=node.js&logoColor=white" alt="Node"></a>
-  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.0"><img src="https://img.shields.io/badge/release-v0.1.0-green.svg" alt="Release"></a>
+  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.1"><img src="https://img.shields.io/badge/release-v0.1.1-green.svg" alt="Release"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/status-runnable%20shell-6f42c1" alt="Status"></a>
 </p>
 
@@ -31,6 +31,18 @@
 - 每个面板独立配置 preset
 - 可见的 latency / token / cost 快照
 - 本地 mock 响应，不设任何 API key 也能跑起来
+
+## 自定义 Preset
+
+将你自己的 system prompt 保存为命名 preset，随时复用。自定义 preset 会嵌入 layout 快照，导入时自动恢复。
+
+**保存 preset：** 点击工具栏 **"Save as preset"** → 输入名称和 system prompt → Ctrl+Enter 保存。
+
+**使用 preset：** 从 preset 下拉框中选择 — 自定义 preset 与内置 preset 并排显示。
+
+**导入/导出：** Layout JSON 包含完整的 `customPresets` 数组。分享 layout 文件后，接收者会同时获得面板配置和你自定义的 preset。
+
+![自定义 preset 保存/加载界面](./docs/preset-save-modal.png)
 
 ## 对比效果预览
 
