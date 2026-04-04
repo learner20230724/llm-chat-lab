@@ -353,6 +353,15 @@ function buildMockResponse({ prompt, promptPreset, memoryMode, side }) {
   ].join('\n');
 }
 
+// Per-model cost per 1M output tokens (used for mock estimation)
+const COST_PER_MILLION = {
+  'mock':                   0,
+  'openai:gpt-4o-mini':     0.15,
+  'openai:gpt-4o':          0.90,
+  'anthropic:claude-sonnet-4': 0.003,
+  'anthropic:claude-opus-4':   0.015,
+};
+
 function renderPanelMock(panelEl, side) {
   const promptPreset = panelEl.querySelector('[data-role="promptPreset"]').value;
   const modelPreset  = panelEl.querySelector('[data-role="modelPreset"]').value;
@@ -360,13 +369,37 @@ function renderPanelMock(panelEl, side) {
   const prompt       = sharedInput.value;
   const modelCfg     = MODEL_PRESETS[modelPreset] || MODEL_PRESETS['mock'];
 
+  const mockText = buildMockResponse({ prompt, promptPreset, memoryMode, side });
+  // Estimate tokens from character count (~4 chars/token) and derive cost
+  const estTokens = Math.round(mockText.length / 4);
+  const costRate  = COST_PER_MILLION[modelPreset] ?? 0;
+  const estCost   = (estTokens * costRate / 1_000_000).toFixed(6);
+
   panelEl.querySelector('[data-role="latency"]').textContent = modelCfg.latency;
-  panelEl.querySelector('[data-role="tokens"]').textContent  = modelCfg.tokens;
-  panelEl.querySelector('[data-role="cost"]').textContent    = modelCfg.cost;
-  panelEl.querySelector('[data-role="response"]').textContent = buildMockResponse({
-    prompt, promptPreset, memoryMode, side,
+  panelEl.querySelector('[data-role="tokens"]').textContent  = `~${estTokens} tok`;
+  panelEl.querySelector('[data-role="cost"]').textContent    = costRate === 0 ? '$0' : `~$${estCost}`;
+  panelEl.querySelector('[data-role="response"]').textContent = mockText;
+  results[side] = {
+    latency: modelCfg.latency,
+    tokens:  `~${estTokens} tok`,
+    cost:    costRate === 0 ? '$0' : `~$${estCost}`,
+    model:   modelCfg.label,
+  };
+  attachCopyButton(panelEl);
+}
+
+// ── Copy response ─────────────────────────────────────────────────────────────
+function attachCopyButton(panelEl) {
+  const btn = panelEl.querySelector('.copy-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const text = panelEl.querySelector('[data-role="response"]').textContent;
+    if (!text || text === '…') return;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓';
+      setTimeout(() => { btn.textContent = '📋'; }, 1200);
+    });
   });
-  results[side] = { latency: modelCfg.latency, tokens: modelCfg.tokens, cost: modelCfg.cost, model: modelCfg.label };
 }
 
 // ── Call backend API ───────────────────────────────────────────────────────────
@@ -386,19 +419,9 @@ async function fetchReply(panelEl, side) {
   panelEl.querySelector('[data-role="tokens"]').textContent   = '…';
   panelEl.querySelector('[data-role="cost"]').textContent     = '…';
 
-  // Use mock response directly (no server needed) — works on GitHub Pages
-  if (isMock) {
-    const text = buildMockResponse({ preset: promptPreset, memoryMode, prompt, side });
-    panelEl.querySelector('[data-role="latency"]').textContent = '<1ms';
-    panelEl.querySelector('[data-role="tokens"]').textContent  = '—';
-    panelEl.querySelector('[data-role="cost"]').textContent    = '$0';
-    panelEl.querySelector('[data-role="response"]').textContent = text;
-    results[side] = { latency: '<1ms', tokens: '—', cost: '$0', model: 'mock' };
-    return;
-  }
-
   try {
-    const body = { preset: promptPreset, memoryMode, prompt, provider };
+    const body = { preset: promptPreset, memoryMode, prompt };
+    if (!isMock) body.provider = provider;
     const res = await fetch('/api/compare', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -415,6 +438,7 @@ async function fetchReply(panelEl, side) {
     panelEl.querySelector('[data-role="cost"]').textContent    = cost;
     panelEl.querySelector('[data-role="response"]').textContent = json.text;
     results[side] = { latency: lat, tokens: tok, cost, model: label };
+    attachCopyButton(panelEl);
   } catch (err) {
     // Fall back to mock for this panel
     renderPanelMock(panelEl, side);
@@ -432,6 +456,7 @@ async function runCompare() {
         fetchReply(panelEls[0], 'left'),
         fetchReply(panelEls[1], 'right'),
       ]);
+      updateCompareBar();
       return;
     }
   } catch { /* fall through to mock */ }
