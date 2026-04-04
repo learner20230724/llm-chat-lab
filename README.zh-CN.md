@@ -11,7 +11,7 @@
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/runtime-Node%2022+-339933?logo=node.js&logoColor=white" alt="Node"></a>
-  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.2"><img src="https://img.shields.io/badge/release-v0.1.2-green.svg" alt="Release"></a>
+  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.3"><img src="https://img.shields.io/badge/release-v0.1.3-green.svg" alt="Release"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/status-runnable%20shell-6f42c1" alt="Status"></a>
   <a href="https://learner20230724.github.io/llm-chat-lab/docs/app/"><img src="https://img.shields.io/badge/demo-%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88-brightgreen" alt="Live Demo"></a>
 </p>
@@ -32,6 +32,15 @@
 - 每个面板独立配置 preset
 - 可见的 latency / token / cost 快照
 - 本地 mock 响应，不设任何 API key 也能跑起来
+
+## 键盘快捷键
+
+| 快捷键 | 功能 |
+|---|---|
+| `Ctrl+K` / `Cmd+K` | 聚焦提示词输入框 |
+| `Ctrl+Enter` / `Cmd+Enter` | 运行对比（输入框内） |
+| `Ctrl+S` / `Cmd+S` | 导出当前布局 |
+| `Escape` | 取消聚焦输入框 |
 
 ## 自定义 Preset
 

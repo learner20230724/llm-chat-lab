@@ -11,7 +11,7 @@
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/runtime-Node%2022+-339933?logo=node.js&logoColor=white" alt="Node"></a>
-  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.2"><img src="https://img.shields.io/badge/release-v0.1.2-green.svg" alt="Release"></a>
+  <a href="https://github.com/learner20230724/llm-chat-lab/releases/tag/v0.1.3"><img src="https://img.shields.io/badge/release-v0.1.3-green.svg" alt="Release"></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/status-runnable%20shell-6f42c1" alt="Status"></a>
   <a href="https://learner20230724.github.io/llm-chat-lab/docs/app/"><img src="https://img.shields.io/badge/demo-live%20%F0%9F%9F%A2-brightgreen" alt="Live Demo"></a>
 </p>
@@ -31,6 +31,15 @@
 - 🎨 **Custom preset save/load** — save your own system prompts as named presets; import/export custom presets with layout snapshots
 - 🔌 **Multi-provider ready** — `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` activates live calls; compare GPT-4o vs Claude Sonnet 4 in one run, side by side
 - 🌗 **Theme toggle** — switch between dark and light mode with the 🌙/☀️ button in the toolbar; preference saved to localStorage
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|---|---|
+| `Ctrl+K` / `Cmd+K` | Focus the prompt input |
+| `Ctrl+Enter` / `Cmd+Enter` | Run compare (in input) |
+| `Ctrl+S` / `Cmd+S` | Export current layout |
+| `Escape` | Unfocus input |
 
 ## Custom Presets
 

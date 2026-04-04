@@ -386,9 +386,19 @@ async function fetchReply(panelEl, side) {
   panelEl.querySelector('[data-role="tokens"]').textContent   = '…';
   panelEl.querySelector('[data-role="cost"]').textContent     = '…';
 
+  // Use mock response directly (no server needed) — works on GitHub Pages
+  if (isMock) {
+    const text = buildMockResponse({ preset: promptPreset, memoryMode, prompt, side });
+    panelEl.querySelector('[data-role="latency"]').textContent = '<1ms';
+    panelEl.querySelector('[data-role="tokens"]').textContent  = '—';
+    panelEl.querySelector('[data-role="cost"]').textContent    = '$0';
+    panelEl.querySelector('[data-role="response"]').textContent = text;
+    results[side] = { latency: '<1ms', tokens: '—', cost: '$0', model: 'mock' };
+    return;
+  }
+
   try {
-    const body = { preset: promptPreset, memoryMode, prompt };
-    if (!isMock) body.provider = provider;
+    const body = { preset: promptPreset, memoryMode, prompt, provider };
     const res = await fetch('/api/compare', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

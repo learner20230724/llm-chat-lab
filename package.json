@@ -1,6 +1,6 @@
 {
   "name": "llm-chat-lab",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": false,
   "type": "module",
   "description": "A local-first workspace for comparing chat prompts, model presets, memory modes, and workflow patterns side by side.",
