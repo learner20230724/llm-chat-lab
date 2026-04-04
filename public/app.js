@@ -1,8 +1,8 @@
 // ── Built-in preset definitions ─────────────────────────────────────────────
 const PROMPT_PRESETS = {
-  operator: { label: 'Operator brief' },
-  analyst:  { label: 'Analyst breakdown' },
-  builder:  { label: 'Builder handoff' },
+  operator: { label: 'Operator brief',  system: 'You are a concise operator. Give direct, compressed, next-step oriented advice. Prefer short sentences and actionable bullets.' },
+  analyst:  { label: 'Analyst breakdown', system: 'You are a structured analyst. Break things down, compare tradeoffs explicitly, and be explicit about assumptions and risks.' },
+  builder:  { label: 'Builder handoff',  system: 'You are a builder-oriented advisor. Shape output as a concrete handoff artifact that engineering or ops can run with immediately. Prioritize specificity over abstraction.' },
 };
 
 const MEMORY_MODES = {
@@ -20,7 +20,73 @@ const MODEL_PRESETS = {
   'anthropic:claude-opus-4':    { label: 'Claude Opus 4',   latency: '~2s',  tokens: '—', cost: '$0.015' },
 };
 
-const STORAGE_KEY = 'llm-chat-lab-panels';
+const STORAGE_KEY      = 'llm-chat-lab-panels';
+const CUSTOM_PRESETS_KEY = 'llm-chat-lab-custom-presets';
+
+// ── Custom preset helpers ──────────────────────────────────────────────────────
+function getCustomPresets() {
+  try { return JSON.parse(localStorage.getItem(CUSTOM_PRESETS_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveCustomPreset(name, system) {
+  const id   = `custom_${Date.now()}`;
+  const list = getCustomPresets();
+  list.push({ id, label: name.trim(), system: system.trim() });
+  localStorage.setItem(CUSTOM_PRESETS_KEY, JSON.stringify(list));
+  return id;
+}
+
+function deleteCustomPreset(id) {
+  const list = getCustomPresets().filter((p) => p.id !== id);
+  localStorage.setItem(CUSTOM_PRESETS_KEY, JSON.stringify(list));
+}
+
+function mergePresets() {
+  const merged = { ...PROMPT_PRESETS };
+  getCustomPresets().forEach((p) => { merged[p.id] = { label: p.label, system: p.system }; });
+  return merged;
+}
+
+// Build the <select> options for all promptPreset selectors (built-in + custom)
+function buildPresetOptions() {
+  const customList = getCustomPresets();
+  document.querySelectorAll('select[data-role="promptPreset"]').forEach((sel) => {
+    // Remember current value
+    const prev = sel.value;
+    // Remove all options below the divider comment node
+    const toRemove = [];
+    let hitDivider = false;
+    for (const child of sel.childNodes) {
+      if (child.nodeType === Node.COMMENT_NODE && child.textContent.includes('── custom')) { hitDivider = true; continue; }
+      if (hitDivider) toRemove.push(child);
+    }
+    toRemove.forEach((n) => sel.removeChild(n));
+
+    // Remove existing custom options (check by data attribute)
+    sel.querySelectorAll('option[data-custom]').forEach((o) => o.remove());
+
+    // Add custom preset options before the last built-in (or at end)
+    if (customList.length > 0) {
+      const divider = document.createComment('── custom presets ──');
+      sel.appendChild(divider);
+      customList.forEach((p) => {
+        const opt = document.createElement('option');
+        opt.value          = p.id;
+        opt.textContent    = p.label;
+        opt.dataset.custom = '1';
+        sel.appendChild(opt);
+      });
+    }
+
+    // Restore previous selection if still valid, else fall back
+    if ([...sel.options].some((o) => o.value === prev)) {
+      sel.value = prev;
+    } else if (sel.options.length > 0) {
+      sel.value = sel.options[0].value;
+    }
+  });
+}
 
 // Per-side results for the comparison bar
 const results = { left: null, right: null };
@@ -138,21 +204,58 @@ function flashNotice(type) {
 }
 
 function snapshotPanels() {
-  return panelEls.map((el) => ({
-    promptPreset: el.querySelector('[data-role="promptPreset"]').value,
-    modelPreset:  el.querySelector('[data-role="modelPreset"]').value,
-    memoryMode:   el.querySelector('[data-role="memoryMode"]').value,
-  }));
+  return panelEls.map((el) => {
+    const presetId = el.querySelector('[data-role="promptPreset"]').value;
+    // For custom presets, embed the system text so the snapshot is self-contained
+    const isCustom = presetId.startsWith('custom_');
+    const system   = isCustom ? (mergePresets()[presetId]?.system || '') : undefined;
+    return {
+      promptPreset: presetId,
+      promptSystem: system || undefined,
+      modelPreset:  el.querySelector('[data-role="modelPreset"]').value,
+      memoryMode:   el.querySelector('[data-role="memoryMode"]').value,
+    };
+  });
 }
 
 function applySnapshot(snap) {
   if (!Array.isArray(snap) || snap.length < 2) return false;
-  panelEls.forEach((el, i) => {
-    if (snap[i]) {
-      el.querySelector('[data-role="promptPreset"]').value = snap[i].promptPreset || 'operator';
-      el.querySelector('[data-role="modelPreset"]').value  = snap[i].modelPreset  || 'mock';
-      el.querySelector('[data-role="memoryMode"]').value   = snap[i].memoryMode   || 'none';
+
+  // Handle custom presets embedded in the snapshot (from imported layouts)
+  const snapshotSystems = new Set(snap.filter((s) => s.promptSystem).map((s) => s.promptSystem));
+  if (snapshotSystems.size > 0) {
+    const existing    = getCustomPresets();
+    const existingSys = new Set(existing.map((p) => p.system));
+    const toAdd = [...snapshotSystems]
+      .filter((sys) => !existingSys.has(sys))
+      .map((system) => ({ id: `restored_${Date.now()}_${Math.random().toString(36).slice(2)}`, label: '(imported preset)', system }));
+    if (toAdd.length > 0) {
+      localStorage.setItem(CUSTOM_PRESETS_KEY, JSON.stringify([...existing, ...toAdd]));
+      buildPresetOptions();
     }
+  }
+
+  panelEls.forEach((el, i) => {
+    if (!snap[i]) return;
+    const presetSel = el.querySelector('[data-role="promptPreset"]');
+    const snapPreset = snap[i].promptPreset;
+
+    // Try to match by ID first, then by system text for custom presets
+    const allOpts    = [...presetSel.options];
+    const byId      = allOpts.find((o) => o.value === snapPreset);
+    if (byId) {
+      presetSel.value = snapPreset;
+    } else if (snap[i].promptSystem) {
+      // Find the restored preset that matches this system text
+      const match = getCustomPresets().find((p) => p.system === snap[i].promptSystem);
+      if (match) presetSel.value = match.id;
+      else presetSel.value = allOpts[0]?.value || 'operator';
+    } else {
+      presetSel.value = allOpts[0]?.value || 'operator';
+    }
+
+    el.querySelector('[data-role="modelPreset"]').value = snap[i].modelPreset || 'mock';
+    el.querySelector('[data-role="memoryMode"]').value  = snap[i].memoryMode  || 'none';
   });
   return true;
 }
@@ -162,12 +265,26 @@ function currentConfig() {
     version: 1,
     sharedInput: sharedInput.value,
     panels: snapshotPanels(),
+    // Include full custom preset definitions so the export is self-contained
+    customPresets: getCustomPresets(),
   };
 }
 
 function loadConfig(cfg) {
   if (!cfg || cfg.version !== 1) return false;
   if (cfg.sharedInput !== undefined) sharedInput.value = cfg.sharedInput;
+
+  // Merge imported custom presets into localStorage
+  if (cfg.customPresets && Array.isArray(cfg.customPresets)) {
+    const existing   = getCustomPresets();
+    const existingIds = new Set(existing.map((p) => p.id));
+    const toAdd = cfg.customPresets.filter((p) => !existingIds.has(p.id));
+    if (toAdd.length > 0) {
+      localStorage.setItem(CUSTOM_PRESETS_KEY, JSON.stringify([...existing, ...toAdd]));
+      buildPresetOptions();
+    }
+  }
+
   if (cfg.panels) applySnapshot(cfg.panels);
   return true;
 }
@@ -214,7 +331,7 @@ function importLayout(file) {
 
 // ── Render mock response ───────────────────────────────────────────────────────
 function buildMockResponse({ prompt, promptPreset, memoryMode, side }) {
-  const preset = PROMPT_PRESETS[promptPreset];
+  const preset = (mergePresets()[promptPreset] || PROMPT_PRESETS.operator);
   const opening = side === 'left'
     ? 'This setup optimizes for speed and operator clarity.'
     : 'This setup optimizes for inspection and structured tradeoffs.';
@@ -222,7 +339,7 @@ function buildMockResponse({ prompt, promptPreset, memoryMode, side }) {
     operator: 'Recommendation: turn the request into a tight execution path with named steps, owner boundaries, and one obvious next move.',
     analyst:  'Recommendation: separate scope, decision criteria, and rollout risks so the comparison is visible instead of implied.',
     builder:  'Recommendation: shape the output as a handoff artifact that engineering or ops can run with immediately.',
-  }[promptPreset];
+  }[promptPreset] || 'Recommendation: adapt the output format to best serve the user goal.';
   return [
     opening, '',
     `Prompt preset: ${preset.label}`,
@@ -328,6 +445,52 @@ function autoSave() {
 }
 
 // ── Init ─────────────────────────────────────────────────────────────────────
+// Populate preset selectors with built-in + any saved custom presets
+buildPresetOptions();
+
+// ── Save-preset modal ──────────────────────────────────────────────────────────
+const modal         = document.getElementById('presetModal');
+const nameInput     = document.getElementById('presetNameInput');
+const systemInput   = document.getElementById('presetSystemInput');
+const savePresetBtn = document.getElementById('savePresetBtn');
+
+function openPresetModal() {
+  nameInput.value   = '';
+  systemInput.value = '';
+  modal.hidden       = false;
+  nameInput.focus();
+}
+
+function closePresetModal() {
+  modal.hidden = true;
+}
+
+savePresetBtn.addEventListener('click', openPresetModal);
+document.getElementById('presetModalClose').addEventListener('click', closePresetModal);
+document.getElementById('presetModalCancel').addEventListener('click', closePresetModal);
+modal.addEventListener('click', (e) => { if (e.target === modal) closePresetModal(); });
+
+document.getElementById('presetModalSave').addEventListener('click', () => {
+  const name   = nameInput.value.trim();
+  const system = systemInput.value.trim();
+  if (!name)   { nameInput.focus(); return; }
+  if (!system) { systemInput.focus(); return; }
+  saveCustomPreset(name, system);
+  buildPresetOptions();
+  closePresetModal();
+  flashNotice('saved');
+});
+
+// Allow Ctrl+Enter to save in modal
+[nameInput, systemInput].forEach((el) => {
+  el.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      document.getElementById('presetModalSave').click();
+    }
+    if (e.key === 'Escape') closePresetModal();
+  });
+});
+
 runButton.addEventListener('click', runCompare);
 swapButton.addEventListener('click', swapPanels);
 
