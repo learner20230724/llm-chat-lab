@@ -29,6 +29,7 @@
 - 📤 **Import / export** — download your current layout as JSON, share it, import it back in one click
 - 🎨 **Custom preset save/load** — save your own system prompts as named presets; import/export custom presets with layout snapshots
 - 🔌 **Multi-provider ready** — `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` activates live calls; compare GPT-4o vs Claude Sonnet 4 in one run, side by side
+- 🌗 **Theme toggle** — switch between dark and light mode with the 🌙/☀️ button in the toolbar; preference saved to localStorage
 
 ## Custom Presets
 

@@ -491,6 +491,26 @@ document.getElementById('presetModalSave').addEventListener('click', () => {
   });
 });
 
+// ── Theme toggle ──────────────────────────────────────────────────────────────
+const THEME_KEY = 'llm-chat-lab-theme';
+const THEMES   = { dark: 'dark', light: 'light' };
+let currentTheme = localStorage.getItem(THEME_KEY) || 'dark';
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  document.body.classList.remove('theme-dark', 'theme-light');
+  document.body.classList.add(`theme-${theme}`);
+  document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem(THEME_KEY, theme);
+}
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+});
+
+// Apply saved theme on load
+applyTheme(currentTheme);
+
 runButton.addEventListener('click', runCompare);
 swapButton.addEventListener('click', swapPanels);
 

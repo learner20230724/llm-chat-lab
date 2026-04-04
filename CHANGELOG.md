@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] — 2026-04-04
+
+### Added
+- **Dark/light theme toggle** — 🌙/☀️ button in the toolbar switches between dark and light themes; preference persists to localStorage across sessions.
+
 ## [0.1.1] — 2026-04-04
 
 ### Added
