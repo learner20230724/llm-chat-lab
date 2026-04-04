@@ -73,6 +73,8 @@ GPT-4o mini vs Claude Sonnet 4 — 同一段 prompt，真实 API，可视化 dif
 
 每个示例会自动配置两侧的 preset 和模型，点击 **Run compare** 即可看到对比效果。
 
+![示例对比 — GPT-4o mini vs Claude Sonnet 4](docs/examples-dropdown.png)
+
 ## 为什么做这个
 
 聊天 UI 已经很多了，但大多数都在优化"聊天"。真正把"比较"当主任务的并不多。

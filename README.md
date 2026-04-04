@@ -46,6 +46,8 @@ The workspace opens with a ready-to-run example so you can see the UI in action 
 
 Each example pre-configures the prompt preset and model on both sides — just hit **Run compare** to see the diff.
 
+![Example comparisons — GPT-4o mini vs Claude Sonnet 4](docs/examples-dropdown.png)
+
 ## Keyboard Shortcuts
 
 | Shortcut | Action |
