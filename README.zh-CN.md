@@ -62,6 +62,18 @@ GPT-4o mini vs Claude Sonnet 4 — 同一段 prompt，真实 API，可视化 dif
 
 ![Compare GPT-4o mini vs Claude Sonnet 4](./docs/compare-preview.png)
 
+## 🌗 主题切换
+
+使用工具栏中的 ☀️/🌙 按钮即可在明暗主题之间切换。主题偏好自动保存到 localStorage。
+
+浅色模式：
+
+![主题切换 — 浅色模式](./docs/theme-light-compare.png)
+
+深色模式（默认）：
+
+![主题切换 — 深色模式](./docs/compare-preview.png)
+
 ## 📋 示例对比
 
 工作台打开时会预载一个示例，第一次访问即可看到 UI 效果。使用工具栏中的 **📋 试试示例…** 下拉框可以切换：

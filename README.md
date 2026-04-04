@@ -77,6 +77,18 @@ GPT-4o mini vs Claude Sonnet 4 — same prompt, real providers, visible diff:
 
 ![Compare GPT-4o mini vs Claude Sonnet 4](./docs/compare-preview.png)
 
+## 🌗 Theme Toggle
+
+Switch between dark and light mode with the ☀️/🌙 button in the toolbar. Preference is saved to localStorage automatically.
+
+Light mode:
+
+![Theme toggle — light mode](./docs/theme-light-compare.png)
+
+Dark mode (default):
+
+![Theme toggle — dark mode](./docs/compare-preview.png)
+
 ## What this project is
 
 `llm-chat-lab` is a compare-first workspace for testing the same input against different chat setups.
